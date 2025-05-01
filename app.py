@@ -1,11 +1,10 @@
 import streamlit as st
-import os
-from dotenv import load_dotenv
 import google.generativeai as genai
 import base64
 
-# Load API Key
+# Load API Key from Streamlit Secrets
 API_KEY = st.secrets["GEMINI_API_KEY"]
+genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("models/gemini-1.5-flash")
 
 st.set_page_config(page_title="Rancho - Life Advice", layout="centered")
@@ -46,6 +45,7 @@ def set_background(image_file):
         }}
         .user-question {{
             font-weight: bold;
+            color: #000;
         }}
         </style>
         """
@@ -71,8 +71,8 @@ with st.form(key="chat_form", clear_on_submit=True):
     user_input = st.text_input("💬 Your question:", key="input_text")
     submit = st.form_submit_button("Ask Rancho")
 
-# Response logic
-if submit and user_input:
+# Handle response
+if submit and user_input.strip():
     prompt = f"""
     You are Rancho from the movie 3 Idiots.
     Give a life advice in less than 100 words.
@@ -88,7 +88,7 @@ if submit and user_input:
         except Exception as e:
             st.error(f"Error: {e}")
 
-# Display chat history
+# Show chat history
 for q, a in st.session_state.chat_history:
     st.markdown(f"""
     <div class="chat-bubble">
