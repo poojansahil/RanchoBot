@@ -5,9 +5,7 @@ import google.generativeai as genai
 import base64
 
 # Load API Key
-load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=API_KEY)
+API_KEY = st.secrets["GEMINI_API_KEY"]
 model = genai.GenerativeModel("models/gemini-1.5-flash")
 
 st.set_page_config(page_title="Rancho - Life Advice", layout="centered")
