@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 import base64
+import requests  # 🔹 Added to send webhook requests
 
 # Load API Key from Streamlit Secrets
 API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -98,3 +99,15 @@ for q, a in st.session_state.chat_history:
         <div>{a}</div>
     </div>
     """, unsafe_allow_html=True)
+
+# 🔹 ADDITION: Telegram Start Chat Button
+if st.button("🚀 Start Chat on Telegram"):
+    try:
+        webhook_url = "https://n8n-production-cacf.up.railway.app/webhook-test/1f60e267-a7f8-4765-825a-6ba1a1537736"
+        response = requests.post(webhook_url)
+        if response.status_code == 200:
+            st.success("Telegram chat started successfully!")
+        else:
+            st.error(f"Failed to start Telegram chat. Status: {response.status_code}")
+    except Exception as e:
+        st.error(f"Error triggering webhook: {e}")
